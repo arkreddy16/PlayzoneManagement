@@ -1,0 +1,3 @@
+id,username,password,role,fullName,email,createdAt,updatedAt
+1,admin,$2b$12$YcZOnpmiHbBR0IFa1xhfNOvtSakySlk2yOgc1kEkz1j0yRhZDBsTG,admin,Administrator,admin@playzone.com,2025-12-01T10:50:05.764308,2025-12-01T10:50:05.764308
+2,monika,$2b$12$4hOooRphQxnjv5OT6H7fhumVCoRXbcKnHytU3XlEqGp1QZi8S6Cm.,store_manager,Monika,,2025-12-01T13:20:13.315410,2025-12-01T13:20:13.315410

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POGO LAND Manager</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Login Page -->
+        <div id="login-page" class="page">
+            <div class="login-container">
+                <div class="login-header">
+                    <h1>🎈 POGO LAND Manager</h1>
+                    <p>Welcome back! Please login to continue.</p>
+                </div>
+                <form id="login-form" class="login-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required placeholder="Enter username">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required placeholder="Enter password">
+                    </div>
+                    <div id="login-error" class="error-message hidden"></div>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </form>
+                <div class="login-footer">
+                    <p>Default: admin / admin123</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard-page" class="page hidden">
+            <!-- Sidebar -->
+            <nav class="sidebar">
+                <div class="sidebar-header">
+                    <h2>🎈 POGO LAND</h2>
+                    <p id="user-role-display"></p>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item active" data-page="dashboard">
+                        <span class="nav-icon">📊</span> Dashboard
+                    </li>
+                    <li class="nav-item" data-page="walkins">
+                        <span class="nav-icon">👶</span> Walk-ins
+                    </li>
+                    <li class="nav-item" data-page="packages">
+                        <span class="nav-icon">🎟️</span> Packages
+                    </li>
+                    <li class="nav-item" data-page="parties">
+                        <span class="nav-icon">🎉</span> Parties
+                    </li>
+                    <li class="nav-item admin-only" data-page="users">
+                        <span class="nav-icon">👥</span> Users
+                    </li>
+                    <li class="nav-item admin-only" data-page="reports">
+                        <span class="nav-icon">📊</span> Reports
+                    </li>
+                    <li class="nav-item admin-only" data-page="backup">
+                        <span class="nav-icon">💾</span> Backup
+                    </li>
+                </ul>
+                <div class="sidebar-footer">
+                    <button id="logout-btn" class="btn btn-secondary btn-block">Logout</button>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Dashboard Section -->
+                <section id="section-dashboard" class="content-section">
+                    <div class="section-header">
+                        <h1>Dashboard</h1>
+                        <p id="current-date"></p>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card clickable" onclick="goToActiveWalkins()">
+                            <div class="stat-icon">👶</div>
+                            <div class="stat-info">
+                                <h3 id="stat-active-walkins">0</h3>
+                                <p>Active Walk-ins</p>
+                            </div>
+                        </div>
+                        <div class="stat-card clickable" onclick="goToTodayWalkins()">
+                            <div class="stat-icon">📋</div>
+                            <div class="stat-info">
+                                <h3 id="stat-today-walkins">0</h3>
+                                <p>Today's Walk-ins</p>
+                            </div>
+                        </div>
+                        <div class="stat-card clickable" onclick="goToCompletedParties()">
+                            <div class="stat-icon">🎉</div>
+                            <div class="stat-info">
+                                <h3 id="stat-completed-parties">0</h3>
+                                <p>Parties Completed</p>
+                            </div>
+                        </div>
+                        <div class="stat-card clickable" onclick="goToUpcomingParties()">
+                            <div class="stat-icon">📅</div>
+                            <div class="stat-info">
+                                <h3 id="stat-upcoming-parties">0</h3>
+                                <p>Upcoming Parties</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Monthly Summary Section (Admin Only) -->
+                    <div id="monthly-summary" class="monthly-summary admin-only hidden">
+                        <div class="summary-header">
+                            <h3>📊 Monthly Summary</h3>
+                            <div class="month-selector">
+                                <button class="btn btn-small btn-secondary" onclick="changeMonth(-1)">&lt;</button>
+                                <span id="summary-month-label"></span>
+                                <button class="btn btn-small btn-secondary" onclick="changeMonth(1)">&gt;</button>
+                            </div>
+                        </div>
+                        <div class="summary-grid">
+                            <div class="summary-card">
+                                <div class="summary-icon">👶</div>
+                                <div class="summary-info">
+                                    <h4 id="summary-walkins-count">0</h4>
+                                    <p>Total Walk-ins</p>
+                                </div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="summary-icon">💰</div>
+                                <div class="summary-info">
+                                    <h4 id="summary-walkins-amount">₹0</h4>
+                                    <p>Walk-ins Revenue</p>
+                                </div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="summary-icon">🍔</div>
+                                <div class="summary-info">
+                                    <h4 id="summary-food-amount">₹0</h4>
+                                    <p>Food Revenue</p>
+                                </div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="summary-icon">🎉</div>
+                                <div class="summary-info">
+                                    <h4 id="summary-parties-count">0</h4>
+                                    <p>Total Parties</p>
+                                </div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="summary-icon">💵</div>
+                                <div class="summary-info">
+                                    <h4 id="summary-parties-advance">₹0</h4>
+                                    <p>Party Advance</p>
+                                </div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="summary-icon">🎊</div>
+                                <div class="summary-info">
+                                    <h4 id="summary-parties-total">₹0</h4>
+                                    <p>Party Revenue</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-tables">
+                        <div class="table-container">
+                            <h3>Active Walk-ins</h3>
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Child Name</th>
+                                        <th>Parent</th>
+                                        <th>Check-in Time</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dashboard-active-walkins"></tbody>
+                            </table>
+                        </div>
+                        <div class="table-container">
+                            <div class="table-header-with-filter">
+                                <h3>Upcoming Parties</h3>
+                                <div class="date-range-filter">
+                                    <label>From:</label>
+                                    <input type="date" id="parties-date-from">
+                                    <label>To:</label>
+                                    <input type="date" id="parties-date-to">
+                                    <button class="btn btn-small btn-primary" onclick="filterUpcomingParties()">Apply</button>
+                                </div>
+                            </div>
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Child Name</th>
+                                        <th>Parent</th>
+                                        <th>Phone</th>
+                                        <th>Guests</th>
+                                        <th>Package</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dashboard-today-parties"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Walk-ins Section -->
+                <section id="section-walkins" class="content-section hidden">
+                    <div class="section-header">
+                        <h1>Kids Walk-ins</h1>
+                        <button class="btn btn-primary" onclick="showWalkinModal()">+ New Walk-in</button>
+                    </div>
+                    <div class="filter-bar">
+                        <select id="walkins-filter">
+                            <option value="today">Today</option>
+                            <option value="active">Active Only</option>
+                            <option value="completed">Checked Out</option>
+                            <option value="daterange">Date Range</option>
+                            <option value="all">All</option>
+                        </select>
+                        <div id="walkins-date-range" class="date-range-filter hidden">
+                            <input type="date" id="walkins-from-date">
+                            <span>to</span>
+                            <input type="date" id="walkins-to-date">
+                            <button type="button" class="btn btn-primary btn-small" onclick="loadWalkins()">Apply</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Tag</th>
+                                    <th>Child Name</th>
+                                    <th>Age</th>
+                                    <th>Gender</th>
+                                    <th>Parent</th>
+                                    <th>Mobile</th>
+                                    <th>Amount</th>
+                                    <th>Mode</th>
+                                    <th>Check-in</th>
+                                    <th>Check-out</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="walkins-table-body"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Parties Section -->
+                <section id="section-parties" class="content-section hidden">
+                    <div class="section-header">
+                        <h1>Party Bookings</h1>
+                        <button class="btn btn-primary" onclick="showPartyModal()">+ New Booking</button>
+                    </div>
+                    <div class="filter-bar">
+                        <select id="parties-filter">
+                            <option value="upcoming">Upcoming</option>
+                            <option value="today">Today</option>
+                            <option value="thismonth">This Month</option>
+                            <option value="completed">Completed</option>
+                            <option value="all">All</option>
+                        </select>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Child Name</th>
+                                    <th>Age</th>
+                                    <th>Parent</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Guests</th>
+                                    <th>Package</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="parties-table-body"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Packages Section -->
+                <section id="section-packages" class="content-section hidden">
+                    <div class="section-header">
+                        <h1>Packages</h1>
+                        <button class="btn btn-primary" onclick="showPackageModal()">+ New Package</button>
+                    </div>
+                    <div class="filter-bar">
+                        <select id="packages-filter">
+                            <option value="active">Active</option>
+                            <option value="expiring">Expiring (With Visits Left)</option>
+                            <option value="completed">Completed</option>
+                            <option value="all">All</option>
+                        </select>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Child Name</th>
+                                    <th>Parent</th>
+                                    <th>Phone</th>
+                                    <th>Package Type</th>
+                                    <th>Total Visits</th>
+                                    <th>Used</th>
+                                    <th>Remaining</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="packages-table-body"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Users Section (Admin Only) -->
+                <section id="section-users" class="content-section hidden">
+                    <div class="section-header">
+                        <h1>User Management</h1>
+                        <button class="btn btn-primary" onclick="showUserModal()">+ Add User</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Username</th>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Reports Section (Admin Only) -->
+                <section id="section-reports" class="content-section hidden">
+                    <div class="section-header">
+                        <h1>Monthly Reports</h1>
+                        <div class="header-actions">
+                            <button class="btn btn-secondary" onclick="changeReportMonth(-1)">&lt; Previous</button>
+                            <span id="report-month-label" class="report-month-label"></span>
+                            <button class="btn btn-secondary" onclick="changeReportMonth(1)">Next &gt;</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Summary Cards -->
+                    <div class="report-summary-cards">
+                        <div class="report-card walkins-card">
+                            <h3>👶 Walk-ins Summary</h3>
+                            <div class="report-card-content">
+                                <div class="report-stat">
+                                    <span class="stat-value" id="report-walkins-count">0</span>
+                                    <span class="stat-label">Total Walk-ins</span>
+                                </div>
+                                <div class="report-stat">
+                                    <span class="stat-value" id="report-walkins-amount">₹0</span>
+                                    <span class="stat-label">Revenue</span>
+                                </div>
+                                <div class="report-stat">
+                                    <span class="stat-value" id="report-food-amount">₹0</span>
+                                    <span class="stat-label">Food</span>
+                                </div>
+                                <div class="report-stat total">
+                                    <span class="stat-value" id="report-walkins-total">₹0</span>
+                                    <span class="stat-label">Total Revenue</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="report-card parties-card">
+                            <h3>🎉 Parties Summary</h3>
+                            <div class="report-card-content">
+                                <div class="report-stat">
+                                    <span class="stat-value" id="report-parties-count">0</span>
+                                    <span class="stat-label">Total Parties</span>
+                                </div>
+                                <div class="report-stat">
+                                    <span class="stat-value" id="report-parties-advance">₹0</span>
+                                    <span class="stat-label">Advance</span>
+                                </div>
+                                <div class="report-stat">
+                                    <span class="stat-value" id="report-parties-amount">₹0</span>
+                                    <span class="stat-label">Total Amount</span>
+                                </div>
+                                <div class="report-stat total">
+                                    <span class="stat-value" id="report-parties-balance">₹0</span>
+                                    <span class="stat-label">Balance Due</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Grand Total -->
+                    <div class="report-grand-total">
+                        <h3>💰 Grand Total Revenue</h3>
+                        <span id="report-grand-total">₹0</span>
+                    </div>
+                    
+                    <!-- Detailed Tables -->
+                    <div class="report-tables">
+                        <div class="table-container">
+                            <h3>👶 Walk-ins Details</h3>
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Child Name</th>
+                                        <th>Parent</th>
+                                        <th>Amount</th>
+                                        <th>Food</th>
+                                        <th>Payment</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="report-walkins-table"></tbody>
+                            </table>
+                        </div>
+                        <div class="table-container">
+                            <h3>🎉 Parties Details</h3>
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Child Name</th>
+                                        <th>Package</th>
+                                        <th>Guests</th>
+                                        <th>Advance</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="report-parties-table"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Backup Section (Admin Only) -->
+                <section id="section-backup" class="content-section hidden">
+                    <div class="section-header">
+                        <h1>Backup & Restore</h1>
+                        <div class="header-actions">
+                            <button class="btn btn-primary" onclick="createBackup()">Create Backup</button>
+                            <label class="btn btn-secondary">
+                                Upload Backup
+                                <input type="file" id="restore-file" accept=".zip" style="display:none" onchange="restoreFromUpload(this)">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="backup-info">
+                        <p>⏰ Daily automatic backups run at 11:59 PM</p>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Filename</th>
+                                    <th>Size</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="backups-table-body"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="modal" id="modal-content">
+            <!-- Modal content will be injected here -->
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
