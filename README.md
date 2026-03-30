@@ -222,3 +222,22 @@ For issues or feature requests, please contact the development team.
 ---
 
 Made with ❤️ for POGO LAND
+
+## Running in Production
+
+For production deployment, use Gunicorn as the WSGI application server:
+
+```bash
+gunicorn app:app
+```
+
+Optional Gunicorn configuration flags:
+```bash
+gunicorn -w 4 -b 0.0.0.0:8000 app:app
+```
+
+Where:
+- `-w 4` sets the number of worker processes
+- `-b 0.0.0.0:8000` binds the server to all interfaces on port 8000
+
+For more advanced Gunicorn configuration, create a `gunicorn_config.py` file and pass it with `--config`.
