@@ -5,6 +5,7 @@ A comprehensive management application for POGO LAND playzone, built with Python
 ## Features
 
 ### 👶 Kids Walk-ins
+
 - Track daily walk-ins with check-in/check-out
 - Store child and parent information
 - Quick search by name or phone number
@@ -12,12 +13,14 @@ A comprehensive management application for POGO LAND playzone, built with Python
 - Payment tracking (Cash, GPay, Card, Bank Transfer)
 
 ### 🎉 Party Bookings
+
 - Manage party reservations
 - Track advance payments and total amounts
 - Status management (Booked, Confirmed, In-Progress, Completed, Cancelled)
 - AM/PM time picker for scheduling
 
 ### 📦 Packages
+
 - Support for visit-based packages (10/20/30 visits)
 - Monthly unlimited packages
 - Automatic expiration tracking
@@ -25,17 +28,20 @@ A comprehensive management application for POGO LAND playzone, built with Python
 - Color-coded status indicators
 
 ### 📊 Dashboard & Reports
+
 - Real-time statistics
 - Monthly summary (Admin only)
 - Detailed reports with revenue breakdown
 - Upcoming parties calendar view
 
 ### 👥 User Management
+
 - Role-based access control (Admin / Store Manager)
 - Admin: Full access to all features
 - Store Manager: Limited to today's data and last 7 days
 
 ### 🔒 Security Features
+
 - JWT authentication
 - Password hashing with bcrypt
 - Role-based permissions
@@ -48,10 +54,12 @@ A comprehensive management application for POGO LAND playzone, built with Python
 - **Storage:** CSV files (no database required)
 - **Frontend:** Vanilla HTML, CSS, JavaScript
 - **Scheduler:** APScheduler (for daily backups)
+- **Production Server:** Gunicorn 23.0.0
 
 ## Installation
 
 ### Prerequisites
+
 - Python 3.8 or higher
 - pip (Python package manager)
 
@@ -134,10 +142,12 @@ pl-app/
 ## API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/login` - User login
 - `GET /api/auth/verify` - Verify JWT token
 
 ### Walk-ins
+
 - `GET /api/walkins/` - Get all walk-ins
 - `GET /api/walkins/today` - Get today's walk-ins
 - `GET /api/walkins/active` - Get active (not checked out) walk-ins
@@ -147,6 +157,7 @@ pl-app/
 - `DELETE /api/walkins/<id>` - Delete walk-in
 
 ### Parties
+
 - `GET /api/parties/` - Get all parties
 - `GET /api/parties/upcoming` - Get upcoming parties
 - `GET /api/parties/today` - Get today's parties
@@ -155,6 +166,7 @@ pl-app/
 - `DELETE /api/parties/<id>` - Delete party
 
 ### Packages
+
 - `GET /api/packages/` - Get all packages
 - `GET /api/packages/active` - Get active packages
 - `POST /api/packages/` - Create new package
@@ -163,6 +175,7 @@ pl-app/
 - `DELETE /api/packages/<id>` - Delete package
 
 ### Users (Admin only)
+
 - `GET /api/users/` - Get all users
 - `POST /api/users/` - Create new user
 - `PUT /api/users/<id>` - Update user
